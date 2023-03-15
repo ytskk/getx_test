@@ -1,1 +1,1 @@
-export 'accent_color_selection.dart';
+export 'accent_color_item.dart';

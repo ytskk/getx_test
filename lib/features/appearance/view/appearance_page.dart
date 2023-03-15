@@ -17,10 +17,6 @@ class AppearancePage extends StatelessWidget {
         children: [
           AppearanceSelection(),
           AccentColorSelection(),
-          Container(
-            height: 200,
-            color: Theme.of(context).colorScheme.primary,
-          )
         ],
       ),
     );
