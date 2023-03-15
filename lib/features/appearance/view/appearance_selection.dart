@@ -5,7 +5,7 @@ import 'package:getx_test/features/features.dart';
 class AppearanceSelection extends StatelessWidget {
   AppearanceSelection({super.key});
 
-  final appearanceController = Get.put(AppearanceController());
+  final appearanceController = AppearanceController.to;
 
   @override
   Widget build(BuildContext context) {

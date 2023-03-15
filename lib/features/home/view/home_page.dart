@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
       ),
       body: Center(
         child: TextButton(
-          child: Text('Appearance'),
+          child: const Text('Appearance'),
           onPressed: () => context.pushNamed(AppRouteNames.appearance.name),
         ),
       ),

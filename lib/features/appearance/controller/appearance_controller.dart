@@ -5,13 +5,21 @@ import 'package:getx_test/core/core.dart';
 class AppearanceController extends GetxController {
   static AppearanceController to = Get.find();
 
-  late final Rx<ThemeMode> _themeMode = ThemeMode.system.obs;
+  final Rx<ThemeMode> _themeMode = ThemeMode.system.obs;
+  final Rx<Color> _accentColor = Colors.blue.shade500.obs;
 
   get themeModeObs => _themeMode;
   ThemeMode get themeMode => _themeMode.value;
 
+  get accentColorObs => _accentColor;
+  Color get accentColor => _accentColor.value;
+
   void setThemeMode(ThemeMode themeMode) {
     _themeMode.value = themeMode;
+  }
+
+  void setAccentColor(Color accentColor) {
+    _accentColor.value = accentColor;
   }
 
   @override
@@ -22,6 +30,14 @@ class AppearanceController extends GetxController {
       _themeMode,
       (themeMode) {
         LocalStorageController.to.setThemeMode(themeMode);
+      },
+    );
+
+    _accentColor.value = LocalStorageController.to.accentColor;
+    ever(
+      _accentColor,
+      (accentColor) {
+        LocalStorageController.to.setAccentColor(accentColor);
       },
     );
   }

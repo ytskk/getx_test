@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getx_test/features/features.dart';
 
 class AppearancePage extends StatelessWidget {
-  const AppearancePage({super.key});
+  AppearancePage({super.key});
+
+  final appearanceController = Get.put(AppearanceController());
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +16,11 @@ class AppearancePage extends StatelessWidget {
       body: ListView(
         children: [
           AppearanceSelection(),
+          AccentColorSelection(),
+          Container(
+            height: 200,
+            color: Theme.of(context).colorScheme.primary,
+          )
         ],
       ),
     );

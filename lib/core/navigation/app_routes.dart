@@ -16,7 +16,7 @@ final routes = [
         GoRoute(
           name: AppRouteNames.appearance.name,
           path: AppRouteNames.appearance.npath,
-          builder: (_, __) => const AppearancePage(),
+          builder: (_, __) => AppearancePage(),
         ),
       ]),
 ];

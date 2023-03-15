@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,14 +11,37 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeMode = LocalStorageController.to.themeModeObs;
+    final primaryColor = LocalStorageController.to.accentColorObs;
 
     return Obx(
       () => MaterialApp.router(
-        theme: ThemeData.light(useMaterial3: true),
-        darkTheme: ThemeData.dark(useMaterial3: true),
+        themeAnimationDuration: const Duration(milliseconds: 500),
+        themeAnimationCurve: Curves.easeOut,
+        theme: ThemeData.light(useMaterial3: true).copyWith(
+          colorScheme: _getColorSchemeFromSeed(primaryColor.value),
+        ),
+        darkTheme: ThemeData.dark(
+          useMaterial3: true,
+        ).copyWith(
+          colorScheme: _getColorSchemeFromSeed(
+            primaryColor.value,
+            brightness: Brightness.dark,
+          ),
+        ),
         themeMode: themeMode.value,
         routerConfig: router,
       ),
     );
   }
+}
+
+ColorScheme _getColorSchemeFromSeed(
+  Color seedColor, {
+  Brightness brightness = Brightness.light,
+}) {
+  final colorScheme = ColorScheme.fromSeed(
+    seedColor: seedColor,
+    brightness: brightness,
+  );
+  return colorScheme;
 }
