@@ -18,17 +18,17 @@ class AccentColorItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: SizedBox(
+      child: Container(
         height: buttonSize,
         width: buttonSize,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            child: isSelected ? const _ActiveIndicator() : const SizedBox(),
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: _ActiveIndicator(
+            isSelected: isSelected,
+            backgroundColor: color,
           ),
         ),
       ),
@@ -37,17 +37,26 @@ class AccentColorItem extends StatelessWidget {
 }
 
 class _ActiveIndicator extends StatelessWidget {
-  const _ActiveIndicator();
+  const _ActiveIndicator({
+    required this.isSelected,
+    this.backgroundColor = Colors.white,
+  });
+
+  final bool isSelected;
+  final Color backgroundColor;
 
   static const double activeIndicatorSize = 16;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: activeIndicatorSize,
-      width: activeIndicatorSize,
-      decoration: const BoxDecoration(
-        color: Colors.white,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      height: isSelected ? activeIndicatorSize : 0,
+      width: isSelected ? activeIndicatorSize : 0,
+      decoration: BoxDecoration(
+        color: backgroundColor.computeLuminance() > 0.6
+            ? Colors.black
+            : Colors.white,
         shape: BoxShape.circle,
       ),
     );

@@ -17,22 +17,40 @@ class App extends StatelessWidget {
       () => MaterialApp.router(
         themeAnimationDuration: const Duration(milliseconds: 500),
         themeAnimationCurve: Curves.easeOut,
-        theme: ThemeData.light(useMaterial3: true).copyWith(
-          colorScheme: _getColorSchemeFromSeed(primaryColor.value),
-        ),
-        darkTheme: ThemeData.dark(
-          useMaterial3: true,
-        ).copyWith(
-          colorScheme: _getColorSchemeFromSeed(
-            primaryColor.value,
-            brightness: Brightness.dark,
-          ),
+        theme: _buildThemeData(primaryColor.value),
+        darkTheme: _buildThemeData(
+          primaryColor.value,
+          brightness: Brightness.dark,
         ),
         themeMode: themeMode.value,
         routerConfig: router,
       ),
     );
   }
+}
+
+ThemeData _buildThemeData(
+  Color primaryColor, {
+  Brightness brightness = Brightness.light,
+}) {
+  final colorScheme = _getColorSchemeFromSeed(
+    primaryColor,
+    brightness: brightness,
+  );
+
+  if (brightness == Brightness.dark) {
+    return ThemeData.dark(
+      useMaterial3: true,
+    ).copyWith(
+      colorScheme: colorScheme,
+    );
+  }
+
+  return ThemeData.light(
+    useMaterial3: true,
+  ).copyWith(
+    colorScheme: colorScheme,
+  );
 }
 
 ColorScheme _getColorSchemeFromSeed(
