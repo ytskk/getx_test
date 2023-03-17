@@ -8,6 +8,9 @@ enum AppRouteNames {
   appearance(
     AppRoute(name: 'Appearance', path: '/appearance'),
   ),
+  bookId(
+    AppRoute(name: 'Book', path: '/book/:id'),
+  ),
   ;
 
   const AppRouteNames(AppRoute route) : _route = route;
