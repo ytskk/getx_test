@@ -8,8 +8,11 @@ enum AppRouteNames {
   appearance(
     AppRoute(name: 'Appearance', path: '/appearance'),
   ),
-  bookId(
-    AppRoute(name: 'Book', path: '/book/:id'),
+  book(
+    AppRoute(name: 'Book', path: '/book/:name'),
+  ),
+  authorName(
+    AppRoute(name: 'Author', path: '/author/:name'),
   ),
   ;
 

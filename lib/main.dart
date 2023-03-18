@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_test/app.dart';
+import 'package:google_books_api/google_books_api.dart';
 
 import 'core/core.dart';
 
@@ -18,5 +20,11 @@ Future<void> registerServices() async {
 
   Get.put(
     LocalStorageController(localStorageService: localStorageService),
+  );
+
+  Get.put<GoogleBooksApiInterface>(
+    GoogleBooksApi(
+      dio: Dio(),
+    ),
   );
 }

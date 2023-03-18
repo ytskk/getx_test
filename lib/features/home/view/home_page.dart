@@ -10,12 +10,9 @@ import 'package:google_books_api/google_books_api.dart';
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  // TODO: DI
   final HomeBooksController _homeBooksController = Get.put(
     HomeBooksController(
-      apiInterface: GoogleBooksApi(
-        dio: Dio(),
-      ),
+      apiInterface: Get.find(),
     ),
   );
 
@@ -46,8 +43,23 @@ class HomePage extends StatelessWidget {
         () {
           switch (_homeBooksController.state) {
             case HomeBooksState.initial:
-              return const Center(
-                child: Text('Search for books'),
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Search for books'),
+                    FadingButton(
+                      child: Text('Random book'),
+                      onPressed: () => context.pushNamed(
+                        AppRouteNames.book.name,
+                        params: {
+                          'name': 'steve_jobs-walter_isaacson',
+                        },
+                        extra: '26ev_abfrU8C',
+                      ),
+                    ),
+                  ],
+                ),
               );
             case HomeBooksState.loading:
               return const Center(
@@ -86,9 +98,9 @@ class HomePage extends StatelessWidget {
 
   void _onBookTap(BuildContext context, GoogleBookModel book) {
     context.pushNamed(
-      AppRouteNames.bookId.name,
+      AppRouteNames.book.name,
       params: {
-        'id': book.id,
+        'name': book.linkName,
       },
       extra: book,
     );
@@ -101,14 +113,14 @@ class BookCard extends StatelessWidget {
     required this.bookId,
     required this.title,
     this.authors,
-    required this.imageUrl,
+    this.imageUrl,
     required this.onTap,
   });
 
   final String bookId;
   final String title;
   final String? authors;
-  final String imageUrl;
+  final String? imageUrl;
   final VoidCallback onTap;
 
   @override
@@ -124,10 +136,8 @@ class BookCard extends StatelessWidget {
             tag: 'book_image_$bookId',
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                imageUrl,
-                width: double.infinity,
-                fit: BoxFit.cover,
+              child: NetworkImageBox(
+                imageUrl: imageUrl,
               ),
             ),
           ),
@@ -159,6 +169,42 @@ class BookCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class NetworkImageBox extends StatelessWidget {
+  const NetworkImageBox({
+    super.key,
+    this.imageUrl,
+    this.width = defaultWidth,
+    this.height = defaultHeight,
+  });
+
+  final String? imageUrl;
+  final double? width;
+  final double? height;
+
+  static const double defaultWidth = 128;
+  static const double defaultHeight = 200;
+
+  @override
+  Widget build(BuildContext context) {
+    if (imageUrl != null) {
+      return Image.network(
+        imageUrl!,
+        width: defaultWidth,
+        height: defaultHeight,
+        fit: BoxFit.cover,
+      );
+    }
+
+    final theme = Theme.of(context);
+
+    return Container(
+      width: defaultWidth,
+      height: defaultHeight,
+      color: theme.colorScheme.primary.withOpacity(0.1),
     );
   }
 }

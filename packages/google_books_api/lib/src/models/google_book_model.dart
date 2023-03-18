@@ -2,6 +2,7 @@ class GoogleBookModel {
   const GoogleBookModel({
     required this.id,
     required this.title,
+    this.description,
     required this.authors,
     required this.publisher,
     required this.publishedDate,
@@ -17,6 +18,7 @@ class GoogleBookModel {
 
   final String id;
   final String title;
+  final String? description;
   final List<String>? authors;
   final String? publisher;
   final String? publishedDate;
@@ -24,10 +26,34 @@ class GoogleBookModel {
   final double? averageRating;
   final int? ratingsCount;
   final bool isMature;
-  final String imageUrl;
+  final String? imageUrl;
   final String infoUrl;
   final String? isbn10;
   final String? isbn13;
+
+  get linkName {
+    String name = title.toLowerCase();
+
+    // remove punctuation
+    name = name.replaceAll(RegExp(r'[^\w\s]+'), '');
+
+    // replace spaces with dashes
+    name = name.replaceAll(' ', '-');
+
+    if (authors == null) {
+      return name;
+    }
+
+    String authorsString = authors!.join('_').toLowerCase();
+
+    // remove punctuation
+    authorsString = authorsString.replaceAll(RegExp(r'[^\w\s]+'), '');
+
+    // replace spaces with dashes
+    authorsString = authorsString.replaceAll(' ', '-');
+
+    return '${name}_by_$authorsString';
+  }
 
   // to string
   @override
@@ -39,7 +65,7 @@ class GoogleBookModel {
     final volumeInfo = json['volumeInfo'] as Map<String, dynamic>;
     final saleInfo = json['saleInfo'] as Map<String, dynamic>;
     final accessInfo = json['accessInfo'] as Map<String, dynamic>;
-    final imageLinks = volumeInfo['imageLinks'] as Map<String, dynamic>;
+    final imageLinks = volumeInfo['imageLinks'] as Map<String, dynamic>?;
     final authors = volumeInfo['authors'] as List<dynamic>?;
     final rating = double.tryParse(volumeInfo['averageRating'].toString());
     final industryIdentifiers =
@@ -64,6 +90,7 @@ class GoogleBookModel {
     return GoogleBookModel(
       id: json['id'] as String,
       title: volumeInfo['title'] as String,
+      description: volumeInfo['description'] as String?,
       authors: authors?.map((e) => e as String).toList(),
       publisher: volumeInfo['publisher'] as String?,
       publishedDate: volumeInfo['publishedDate'] as String?,
@@ -71,7 +98,7 @@ class GoogleBookModel {
       averageRating: rating,
       ratingsCount: volumeInfo['ratingsCount'] as int?,
       isMature: saleInfo['isEbook'] as bool,
-      imageUrl: imageLinks['thumbnail'] as String,
+      imageUrl: imageLinks == null ? null : imageLinks['thumbnail'] as String,
       infoUrl: accessInfo['webReaderLink'] as String,
       isbn10: isbn10,
       isbn13: isbn13,
@@ -81,6 +108,7 @@ class GoogleBookModel {
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,
+        'description': description,
         'authors': authors,
         'publisher': publisher,
         'publishedDate': publishedDate,

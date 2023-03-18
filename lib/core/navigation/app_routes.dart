@@ -10,16 +10,32 @@ final routes = [
     builder: (_, __) => HomePage(),
   ),
   GoRoute(
-    name: AppRouteNames.bookId.name,
-    path: AppRouteNames.bookId.path,
+    name: AppRouteNames.book.name,
+    path: AppRouteNames.book.path,
     builder: (_, state) {
-      final bookId = state.params['id'] as String;
+      final extra = state.extra;
+      print('extra.runtimeType: ${extra.runtimeType}');
+
+      if (extra.runtimeType == String) {
+        return BookDetailsPage(
+          bookId: extra as String,
+        );
+      }
+
       final GoogleBookModel? book = state.extra as GoogleBookModel?;
 
       return BookDetailsPage(
-        bookId: bookId,
         book: book,
       );
+    },
+  ),
+  GoRoute(
+    name: AppRouteNames.authorName.name,
+    path: AppRouteNames.authorName.path,
+    builder: (_, state) {
+      final authorName = state.params['name'] as String;
+
+      return AuthorDetailsPage(authorName: authorName);
     },
   ),
   GoRoute(
