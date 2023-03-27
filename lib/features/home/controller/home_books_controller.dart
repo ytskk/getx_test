@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
+import 'package:getx_test/core/core.dart';
 import 'package:google_books_api/google_books_api.dart';
 
 class HomeBooksController extends GetxController {
@@ -22,15 +23,15 @@ class HomeBooksController extends GetxController {
 
   // definitions.
 
-  final _state = HomeBooksState.initial.obs;
-  final _books = <GoogleBookModel>[].obs;
+  final Rx<LoadableData<List<GoogleBookModel>>> _loadableData =
+      const LoadableData<List<GoogleBookModel>>().obs;
+
   final _searchQuery = ''.obs;
 
   // getters.
 
-  List<GoogleBookModel> get books => _books;
-
-  HomeBooksState get state => _state.value;
+  LoadableData<List<GoogleBookModel>> get state => _loadableData.value;
+  List<GoogleBookModel> get books => _loadableData.value.data ?? [];
 
   String get searchQuery => _searchQuery.value;
   set searchQuery(String value) => _searchQuery.value = value;
@@ -43,13 +44,16 @@ class HomeBooksController extends GetxController {
       name: 'HomeBooksController::searchBooks',
     );
     try {
-      _state.value = HomeBooksState.loading;
+      _loadableData.value = _loadableData.value.loading();
       final books = await _apiInterface.searchBooks(_searchQuery.value);
 
-      _books.assignAll(books);
-      _state.value = HomeBooksState.loaded;
+      _loadableData.value = _loadableData.value.loaded(books);
     } catch (e) {
-      _state.value = HomeBooksState.error;
+      log(
+        'Error while searching books: $e',
+        name: 'HomeBooksController::searchBooks',
+      );
+      _loadableData.value = _loadableData.value.hasError(e);
     }
   }
 }

@@ -22,6 +22,13 @@ class LoadableData<T> {
     );
   }
 
+  hasError(Object error) {
+    return copyWith(
+      status: LoadingStatus.error,
+      error: error,
+    );
+  }
+
   when({
     Widget Function()? initial,
     required Widget Function() loading,
